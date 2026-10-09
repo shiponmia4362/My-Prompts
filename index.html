@@ -1,0 +1,2498 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Prompt Hub Pro - Sub-Category Edition</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Hind Siliguri', sans-serif; }
+
+  :root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #ec4899;
+    --accent: #06b6d4;
+    --bg: #0f172a;
+    --bg-card: #1e293b;
+    --bg-hover: #334155;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --copied: #f59e0b;
+    --copied-bg: rgba(245, 158, 11, 0.12);
+    --gradient: linear-gradient(135deg, #6366f1 0%, #ec4899 50%, #06b6d4 100%);
+    --sidebar-width: 260px;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ===== HEADER (FIXED) ===== */
+  header {
+    flex-shrink: 0;
+    z-index: 1000;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .header-inner {
+    max-width: 100%; margin: 0 auto;
+    padding: 12px 20px;
+    display: flex; align-items: center;
+    justify-content: space-between;
+    gap: 14px; flex-wrap: nowrap;
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 18px; font-weight: 800;
+    letter-spacing: -0.5px; cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .logo-icon {
+    width: 40px; height: 40px; border-radius: 11px;
+    background: var(--gradient);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+    animation: pulse 3s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  .logo-image {
+    object-fit: cover;
+    padding: 0;
+    border: 2px solid transparent;
+    background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+                var(--gradient) border-box;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4); }
+    50% { box-shadow: 0 4px 30px rgba(236, 72, 153, 0.6); }
+  }
+
+  .logo-text {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    white-space: nowrap;
+  }
+
+  /* Sidebar toggle button */
+  .sidebar-toggle {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+    flex-shrink: 0;
+  }
+
+  .sidebar-toggle:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: scale(1.05);
+  }
+
+  .sidebar-toggle.active {
+    background: var(--gradient);
+    border-color: transparent;
+    color: white;
+  }
+
+  .search-box {
+    flex: 1; max-width: 520px; min-width: 150px;
+    position: relative;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 10px 18px 10px 42px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    color: var(--text);
+    font-size: 14px; outline: none;
+    transition: all 0.3s;
+  }
+
+  .search-box input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    background: var(--bg-hover);
+  }
+
+  .search-box input::placeholder { color: var(--text-muted); }
+
+  .search-icon {
+    position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted); font-size: 14px;
+  }
+
+  .header-actions { display: flex; gap: 7px; align-items: center; flex-shrink: 0; }
+
+  .btn {
+    padding: 9px 16px; border: none;
+    border-radius: 10px; font-size: 13px;
+    font-weight: 600; cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--gradient);
+    color: white;
+    background-size: 200% 200%;
+    animation: gradientShift 5s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+  }
+
+  .btn-ghost {
+    background: var(--bg-card);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+  }
+
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-danger:hover { background: #dc2626; transform: translateY(-2px); }
+  .btn-success { background: var(--success); color: white; }
+  .btn-success:hover { background: #059669; }
+  .btn-warning { background: var(--warning); color: white; }
+  .btn-warning:hover { background: #d97706; }
+
+  /* ===== MIDDLE SECTION ===== */
+  .middle-section {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: rgba(30, 41, 59, 0.5);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px 0;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                padding 0.35s ease;
+    position: relative;
+  }
+
+  .sidebar.hidden {
+    width: 0;
+    opacity: 0;
+    padding: 0;
+    overflow: hidden;
+    border-right: none;
+    pointer-events: none;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 6px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+
+  .sidebar-header {
+    padding: 0 20px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .cat-group {
+    margin-bottom: 3px;
+  }
+
+  .cat-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    gap: 8px;
+  }
+
+  .cat-main:hover {
+    background: var(--bg-hover);
+    border-left-color: var(--primary);
+  }
+
+  .cat-main.active {
+    background: rgba(99, 102, 241, 0.12);
+    border-left-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .cat-main-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cat-main-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cat-main-count {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: var(--bg-hover);
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .cat-main-arrow {
+    font-size: 10px;
+    color: var(--text-muted);
+    transition: transform 0.25s;
+  }
+
+  .cat-group.expanded .cat-main-arrow {
+    transform: rotate(90deg);
+  }
+
+  .subcat-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    background: rgba(15, 23, 42, 0.4);
+  }
+
+  .cat-group.expanded .subcat-list {
+    max-height: 1000px;
+  }
+
+  .subcat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px 8px 38px;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+  }
+
+  .subcat-item:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+    border-left-color: var(--accent);
+  }
+
+  .subcat-item.active {
+    background: rgba(6, 182, 212, 0.12);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .subcat-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .subcat-item.active .subcat-dot { background: var(--accent); }
+
+  .subcat-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .subcat-count {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 100px;
+    background: var(--bg-hover);
+  }
+
+  .lock-mini {
+    font-size: 11px;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+    cursor: pointer;
+  }
+
+  .lock-mini:hover { opacity: 1; }
+
+  /* ===== CONTENT AREA (SCROLLABLE) ===== */
+  .content-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px 30px;
+    scroll-behavior: smooth;
+  }
+
+  .content-area::-webkit-scrollbar { width: 8px; }
+  .content-area::-webkit-scrollbar-track { background: transparent; }
+  .content-area::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+  .content-area::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+  }
+
+  .breadcrumb-item {
+    padding: 4px 11px;
+    border-radius: 100px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+    font-size: 12px;
+  }
+
+  .breadcrumb-item:hover {
+    border-color: var(--primary);
+    color: var(--text);
+  }
+
+  .breadcrumb-item.current {
+    background: var(--gradient);
+    color: white;
+    border-color: transparent;
+    font-weight: 600;
+  }
+
+  .breadcrumb-sep { color: var(--text-muted); font-size: 11px; }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .section-title h2 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title h2 .title-badge {
+    font-size: 12px;
+    padding: 3px 11px;
+    border-radius: 100px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .section-info {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .prompts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 16px;
+  }
+
+  .prompt-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+
+  .prompt-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; width: 100%; height: 3px;
+    background: var(--gradient);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.35s;
+  }
+
+  .prompt-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .prompt-card:hover::before { transform: scaleX(1); }
+
+  .prompt-card.copied-active {
+    border-color: var(--copied) !important;
+    background: linear-gradient(180deg, var(--copied-bg) 0%, var(--bg-card) 60%);
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3),
+                0 10px 40px rgba(245, 158, 11, 0.25);
+    transform: translateY(-4px);
+    animation: copiedPulse 2.4s ease-in-out infinite;
+  }
+
+  .prompt-card.copied-active::before {
+    transform: scaleX(1);
+    background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b);
+  }
+
+  .prompt-card.copied-active::after {
+    content: '📌 কপি করা হয়েছে';
+    position: absolute;
+    top: 12px; right: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--copied);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.3px;
+    box-shadow: 0 3px 10px rgba(245, 158, 11, 0.5);
+    animation: badgeIn 0.35s ease;
+  }
+
+  @keyframes copiedPulse {
+    0%, 100% {
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3),
+                  0 10px 40px rgba(245, 158, 11, 0.25);
+    }
+    50% {
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.5),
+                  0 15px 50px rgba(245, 158, 11, 0.4);
+    }
+  }
+
+  @keyframes badgeIn {
+    from { transform: scale(0.6); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .card-cat {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+  }
+
+  .card-subcat {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: rgba(6, 182, 212, 0.15);
+    color: #67e8f9;
+    border: 1px solid rgba(6, 182, 212, 0.3);
+  }
+
+  .card-actions { display: flex; gap: 5px; }
+
+  .icon-btn {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; transition: all 0.25s;
+  }
+
+  .icon-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+    border-color: var(--primary);
+  }
+
+  .icon-btn.delete:hover {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+  }
+
+  .prompt-title {
+    font-size: 16px; font-weight: 700;
+    margin-bottom: 9px;
+    color: var(--text); line-height: 1.4;
+  }
+
+  .prompt-content {
+    color: var(--text-muted);
+    font-size: 13px; line-height: 1.6;
+    flex: 1; margin-bottom: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .prompt-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    gap: 10px;
+  }
+
+  .prompt-date { font-size: 11px; color: var(--text-muted); }
+
+  .copy-btn {
+    padding: 7px 14px;
+    background: var(--bg-hover);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+
+  .copy-btn:hover {
+    background: var(--gradient);
+    color: white;
+    border-color: transparent;
+  }
+
+  .copy-btn.copied {
+    background: var(--copied);
+    color: white;
+    border-color: transparent;
+  }
+
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 70px 20px;
+    color: var(--text-muted);
+  }
+
+  .empty-icon { font-size: 56px; margin-bottom: 14px; opacity: 0.5; }
+  .empty h3 {
+    font-size: 18px; margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  /* ===== FOOTER (SLIM) ===== */
+  footer {
+    flex-shrink: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    z-index: 999;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .footer-inner {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .footer-inner strong {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+  }
+
+  /* ===== ADMIN BAR ===== */
+  .admin-bar {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    background: linear-gradient(90deg, rgba(99,102,241,0.15), rgba(236,72,153,0.15));
+    border-bottom: 1px solid rgba(99,102,241,0.4);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+
+  .admin-bar.visible { display: flex; }
+
+  .admin-bar .status {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600;
+    margin-right: 8px;
+  }
+
+  .admin-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 8px var(--success);
+    animation: blink 2s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .admin-bar .btn { padding: 6px 11px; font-size: 12px; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+    animation: fadeIn 0.25s;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 100%; max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-header h2 { font-size: 17px; font-weight: 700; }
+
+  .close-btn {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .close-btn:hover {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: white;
+  }
+
+  .modal-body {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+    transition: all 0.25s;
+    font-family: inherit;
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  }
+
+  .modal-footer {
+    padding: 16px 22px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 30px; left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 20px;
+    border-radius: 11px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 90vw;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { border-color: var(--success); }
+  .toast.error { border-color: var(--danger); }
+
+  /* Loading */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 4000;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .loading-overlay.active { display: flex; }
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    color: var(--text);
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  /* Sidebar overlay (mobile) */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+  }
+
+  .sidebar-overlay.active { display: block; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .logo-text { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    .header-inner { padding: 10px 14px; gap: 10px; flex-wrap: wrap; }
+    .search-box { order: 4; flex-basis: 100%; max-width: 100%; margin-top: 4px; }
+    .header-actions .btn span { display: none; }
+    .btn { padding: 8px 12px; }
+    .content-area { padding: 14px; }
+    .prompts-grid { grid-template-columns: 1fr; }
+    .sidebar {
+      position: absolute;
+      top: 0; bottom: 0; left: 0;
+      z-index: 100;
+      background: var(--bg);
+      transform: translateX(-100%);
+    }
+    .sidebar:not(.hidden) { transform: translateX(0); }
+    .sidebar.hidden { transform: translateX(-100%); width: var(--sidebar-width); padding: 16px 0; }
+    .modal-footer { flex-direction: column-reverse; }
+    .modal-footer .btn { width: 100%; justify-content: center; }
+    .section-title h2 { font-size: 17px; }
+  }
+
+  @media (max-width: 480px) {
+    .section-title h2 { font-size: 16px; }
+    .footer-inner { font-size: 11px; padding: 10px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER (FIXED) ===== -->
+<header>
+  <div class="header-inner">
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebarVisibility()" title="ক্যাটাগরি মেনু">
+      ☰
+    </button>
+
+    <div class="logo" onclick="resetAll()">
+      <img src="profile.jpg" alt="Profile" class="logo-icon logo-image"
+           onerror="this.outerHTML='<div class=\'logo-icon\'>✨</div>'">
+      <div class="logo-text">AI Prompt Hub Pro</div>
+    </div>
+
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="প্রম্পট খুঁজুন..." oninput="renderPrompts()">
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-ghost" onclick="manualRefresh()" title="রিফ্রেশ">🔄 <span>রিফ্রেশ</span></button>
+      <button class="btn btn-ghost" id="adminBtn" onclick="toggleAdmin()" title="Admin">
+        🔐 <span>অ্যাডমিন</span>
+      </button>
+      <button class="btn btn-primary" id="addBtn" onclick="openModal()" style="display:none;">
+        ➕ <span>নতুন</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== ADMIN BAR ===== -->
+<div class="admin-bar" id="adminBar">
+  <div class="status">
+    <span class="admin-dot"></span>
+    <span>অ্যাডমিন মোড</span>
+  </div>
+  <button class="btn btn-ghost" onclick="openCategoryManage()">🗂 ক্যাটাগরি</button>
+  <button class="btn btn-ghost" onclick="exportPrompts()">📤 এক্সপোর্ট</button>
+  <button class="btn btn-ghost" onclick="importPrompts()">📥 ইমপোর্ট</button>
+  <button class="btn btn-ghost" onclick="resetToken()">🔄 টোকেন</button>
+  <button class="btn btn-danger" onclick="logoutAdmin()">🚪 লগআউট</button>
+</div>
+
+<!-- ===== MIDDLE SECTION ===== -->
+<div class="middle-section">
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebarMobile()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span>ক্যাটাগরি</span>
+      <span id="totalCount" style="color:var(--primary);">0</span>
+    </div>
+    <div id="sidebarContent"></div>
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="content-area" id="contentArea">
+    <div class="breadcrumb" id="breadcrumb"></div>
+
+    <div class="section-title">
+      <h2 id="sectionTitle">
+        <span>সব প্রম্পট</span>
+        <span class="title-badge" id="sectionCount">0</span>
+      </h2>
+      <div class="section-info" id="sectionInfo"></div>
+    </div>
+
+    <div class="prompts-grid" id="promptsGrid"></div>
+  </div>
+</div>
+
+<!-- ===== FOOTER (SLIM) ===== -->
+<footer>
+  <div class="footer-inner">
+    © ২০২৬ <strong>Tream Prompt Hub Pro</strong> — সর্বস্বত্ব সংরক্ষিত
+  </div>
+</footer>
+
+<!-- ===== PROMPT MODAL ===== -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">নতুন প্রম্পট যোগ করুন</h2>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>প্রম্পটের শিরোনাম *</label>
+        <input type="text" id="promptTitle" placeholder="যেমন: ব্লগ পোস্ট লেখার প্রম্পট">
+      </div>
+      <div class="form-group">
+        <label>ক্যাটাগরি *</label>
+        <select id="promptCategory" onchange="updateSubcatSelect()"></select>
+      </div>
+      <div class="form-group">
+        <label>সাব-ক্যাটাগরি *</label>
+        <select id="promptSubcategory"></select>
+      </div>
+      <div class="form-group">
+        <label>প্রম্পট টেক্সট *</label>
+        <textarea id="promptContent" placeholder="এখানে আপনার সম্পূর্ণ প্রম্পট লিখুন..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">বাতিল</button>
+      <button class="btn btn-primary" onclick="savePrompt()">💾 সেভ করুন</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LOGIN MODAL ===== -->
+<div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeLogin()">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h2>🔐 অ্যাডমিন লগইন</h2>
+      <button class="close-btn" onclick="closeLogin()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>পাসওয়ার্ড</label>
+        <input type="password" id="adminPassword" placeholder="পাসওয়ার্ড..." onkeypress="if(event.key==='Enter')loginAdmin()">
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);text-align:center;">
+        ডিফল্ট: <code style="background:var(--bg);padding:2px 8px;border-radius:4px;color:var(--primary);">admin123</code>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeLogin()">বাতিল</button>
+      <button class="btn btn-primary" onclick="loginAdmin()">🚪 লগইন</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOKEN MODAL ===== -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <h2>🔑 GitHub টোকেন</h2>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--text-muted);line-height:1.7;">
+        আপনার GitHub Personal Access Token দিন। এটি শুধু আপনার ব্রাউজারে সেভ হবে।
+      </p>
+      <div class="form-group">
+        <label>GitHub Token *</label>
+        <input type="password" id="githubTokenInput" placeholder="github_pat_..." style="font-family:monospace;font-size:12px;">
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);">
+        স্কোপ: <b>Contents: Read and write</b>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="logoutAdmin(); closeTokenModal()">বাতিল</button>
+      <button class="btn btn-primary" onclick="submitToken()">✅ সেভ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CATEGORY MANAGE MODAL ===== -->
+<div class="modal-overlay" id="catModal" onclick="if(event.target===this)closeCategoryManage()">
+  <div class="modal" style="max-width:680px;">
+    <div class="modal-header">
+      <h2>🗂 ক্যাটাগরি ও সাব-ক্যাটাগরি ম্যানেজমেন্ট</h2>
+      <button class="close-btn" onclick="closeCategoryManage()">✕</button>
+    </div>
+    <div class="modal-body" id="catModalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeCategoryManage()">বন্ধ করুন</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LOCK MODAL (Category) ===== -->
+<div class="modal-overlay" id="lockModal" onclick="if(event.target===this)closeLockModal()">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h2>🔒 ক্যাটাগরি লক</h2>
+      <button class="close-btn" onclick="closeLockModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label id="lockCatName" style="font-size:14px;color:var(--primary);"></label>
+      </div>
+      <div class="form-group">
+        <label>পাসওয়ার্ড</label>
+        <input type="password" id="catLockPassword" placeholder="পাসওয়ার্ড...">
+      </div>
+      <div class="form-group">
+        <label>নিশ্চিত করুন</label>
+        <input type="password" id="catLockPasswordConfirm" placeholder="আবার...">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeLockModal()">বাতিল</button>
+      <button class="btn btn-warning" onclick="confirmLockCategory()">🔒 লক</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== UNLOCK MODAL (Category/Subcategory) ===== -->
+<div class="modal-overlay" id="unlockModal" onclick="if(event.target===this)closeUnlockModal()">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h2 id="unlockTitle">🔓 আনলক করুন</h2>
+      <button class="close-btn" onclick="closeUnlockModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label id="unlockCatName" style="font-size:14px;color:var(--primary);"></label>
+      </div>
+      <div class="form-group">
+        <label>পাসওয়ার্ড</label>
+        <input type="password" id="unlockPassword" placeholder="পাসওয়ার্ড..." onkeypress="if(event.key==='Enter')confirmUnlockCategory()">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeUnlockModal()">বাতিল</button>
+      <button class="btn btn-success" onclick="confirmUnlockCategory()">🔓 আনলক</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LOADING ===== -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">লোড হচ্ছে...</div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // =====================================================
+  // ===== CONFIGURATION =================================
+  // =====================================================
+  const ADMIN_PASSWORD = 'admin123';
+  const GITHUB_USERNAME = 'shiponmia4362';
+  const GITHUB_REPO = 'Ai-Prompts';
+  const GITHUB_BRANCH = 'main';
+  const GITHUB_FILE_PATH = 'prompts.json';
+  const GITHUB_TOKEN_KEY = 'ai_prompt_pro_github_token';
+  const CACHE_KEY = 'ai_prompt_pro_cache_v5';
+  const ADMIN_SESSION_KEY = 'ai_prompt_pro_admin_session';
+  const SIDEBAR_STATE_KEY = 'ai_prompt_sidebar_state';
+
+  // =====================================================
+  // ===== STATE =========================================
+  // =====================================================
+  let data = {
+    prompts: [],
+    categoryTree: [],
+    lockedCategories: {},      // { categoryName: hash }
+    lockedSubcategories: {}    // { "category::subcategory": hash }
+  };
+  let activeCategory = null;
+  let activeSubcategory = null;
+  let expandedCats = {};
+  let editingId = null;
+  let isAdmin = false;
+  let githubToken = '';
+  let fileSha = '';
+  let pendingLockCategory = null;
+  let pendingLockType = null;      // 'category' বা 'subcategory'
+  let pendingLockSubName = null;
+  let pendingUnlockCategory = null;
+  let pendingUnlockType = null;
+  let pendingUnlockSubName = null;
+  let currentlyCopiedId = null;
+
+  // =====================================================
+  // ===== DEFAULT DATA ==================================
+  // =====================================================
+  const DEFAULT_TREE = [
+    { name: 'লেখালেখি', subs: [
+      { name: 'ব্লগ পোস্ট' }, { name: 'কপিরাইটিং' }, { name: 'ইমেইল' }, { name: 'স্টোরি' }
+    ]},
+    { name: 'মার্কেটিং', subs: [
+      { name: 'সোশ্যাল মিডিয়া' }, { name: 'SEO' }, { name: 'বিজ্ঞাপন' }, { name: 'ইমেইল মার্কেটিং' }
+    ]},
+    { name: 'প্রোগ্রামিং', subs: [
+      { name: 'JavaScript' }, { name: 'Python' }, { name: 'React' }, { name: 'Debugging' }
+    ]},
+    { name: 'ডিজাইন', subs: [
+      { name: 'UI/UX' }, { name: 'লোগো' }, { name: 'ব্যানার' }
+    ]},
+    { name: 'শিক্ষা', subs: [
+      { name: 'ব্যাখ্যা' }, { name: 'প্রশ্নোত্তর' }, { name: 'সারাংশ' }
+    ]},
+    { name: 'ব্যবসা', subs: [
+      { name: 'পরিকল্পনা' }, { name: 'বিশ্লেষণ' }
+    ]}
+  ];
+
+  const DEFAULT_PROMPTS = [
+    { id: 'p1', title: 'ব্লগ পোস্ট আউটলাইন', category: 'লেখালেখি', subcategory: 'ব্লগ পোস্ট',
+      content: 'তুমি একজন অভিজ্ঞ কনটেন্ট রাইটার। "[বিষয়]" নিয়ে একটি বিস্তারিত ব্লগ পোস্টের আউটলাইন তৈরি করো।',
+      date: Date.now() - 86400000 * 2 },
+    { id: 'p2', title: 'সোশ্যাল মিডিয়া ক্যাপশন', category: 'মার্কেটিং', subcategory: 'সোশ্যাল মিডিয়া',
+      content: 'আমার পণ্য "[পণ্যের নাম]" এর জন্য ৫টি আকর্ষণীয় ইনস্টাগ্রাম ক্যাপশন লেখো।',
+      date: Date.now() - 86400000 * 3 },
+    { id: 'p3', title: 'JavaScript বাগ ফিক্স', category: 'প্রোগ্রামিং', subcategory: 'JavaScript',
+      content: 'তুমি একজন সিনিয়র JavaScript ডেভেলপার। নিচের কোডে কী সমস্যা আছে বিশ্লেষণ করো:\n\n[কোড]',
+      date: Date.now() - 86400000 * 4 },
+    { id: 'p4', title: 'UI কালার স্কিম', category: 'ডিজাইন', subcategory: 'UI/UX',
+      content: 'তুমি একজন UI ডিজাইনার। "[অ্যাপের ধরন]" এর জন্য একটি আধুনিক কালার স্কিম সাজেস্ট করো।',
+      date: Date.now() - 86400000 * 5 },
+    { id: 'p5', title: 'জটিল বিষয় সহজ ব্যাখ্যা', category: 'শিক্ষা', subcategory: 'ব্যাখ্যা',
+      content: 'তুমি একজন দক্ষ শিক্ষক। "[বিষয়]" কে একদম সহজ ভাষায় ব্যাখ্যা করো।',
+      date: Date.now() - 86400000 * 6 },
+    { id: 'p6', title: 'স্টার্টআপ আইডিয়া', category: 'ব্যবসা', subcategory: 'পরিকল্পনা',
+      content: 'তুমি একজন ব্যবসায়িক কনসালট্যান্ট। "[আইডিয়া]" এর জন্য একটি লিন ক্যানভাস তৈরি করো।',
+      date: Date.now() - 86400000 * 7 }
+  ];
+
+  // =====================================================
+  // ===== LOADING =======================================
+  // =====================================================
+  function showLoading(text = 'লোড হচ্ছে...') {
+    document.getElementById('loadingText').textContent = text;
+    document.getElementById('loadingOverlay').classList.add('active');
+  }
+  function hideLoading() {
+    document.getElementById('loadingOverlay').classList.remove('active');
+  }
+
+  // =====================================================
+  // ===== GITHUB API ====================================
+  // =====================================================
+  const GITHUB_API = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
+
+  async function loadFromGitHub(silent = false) {
+    if (!silent) showLoading('GitHub থেকে লোড হচ্ছে...');
+    try {
+      const res = await fetch(`${GITHUB_API}?ref=${GITHUB_BRANCH}&t=${Date.now()}`, {
+        headers: { 'Accept': 'application/vnd.github+json' }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const json = await res.json();
+      fileSha = json.sha;
+
+      const binary = atob(json.content.replace(/\n/g, ''));
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      const decoded = new TextDecoder('utf-8').decode(bytes);
+      const parsed = JSON.parse(decoded);
+
+      // Migration: পুরোনো ফরম্যাট → নতুন
+      if (parsed.categories && !parsed.categoryTree) {
+        const tree = {};
+        parsed.categories.forEach(c => { tree[c] = { name: c, subs: [] }; });
+        (parsed.prompts || []).forEach(p => {
+          if (p.subcategory && tree[p.category]) {
+            if (!tree[p.category].subs.find(s => s.name === p.subcategory)) {
+              tree[p.category].subs.push({ name: p.subcategory });
+            }
+          }
+        });
+        parsed.categoryTree = Object.values(tree).map(c => ({
+          name: c.name,
+          subs: c.subs.length > 0 ? c.subs : [{ name: 'সাধারণ' }]
+        }));
+      }
+
+      data.prompts = parsed.prompts || [];
+      data.categoryTree = parsed.categoryTree || [...DEFAULT_TREE];
+      data.lockedCategories = parsed.lockedCategories || {};
+      data.lockedSubcategories = parsed.lockedSubcategories || {};
+
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (e) {}
+      return true;
+    } catch (err) {
+      console.error('GitHub load error:', err);
+      if (!silent) showToast('⚠️ GitHub থেকে লোড হয়নি: ' + err.message, false);
+      try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) data = JSON.parse(cached);
+      } catch (e) {}
+      return false;
+    } finally {
+      if (!silent) hideLoading();
+    }
+  }
+
+  async function saveToGitHub(commitMessage = 'Update', silent = false) {
+    if (!githubToken) {
+      showToast('❌ GitHub টোকেন নেই!', false);
+      throw new Error('No token');
+    }
+    if (!silent) showLoading('সেভ হচ্ছে...');
+    try {
+      const payload = {
+        prompts: data.prompts,
+        categoryTree: data.categoryTree,
+        lockedCategories: data.lockedCategories,
+        lockedSubcategories: data.lockedSubcategories,
+        lastUpdate: new Date().toISOString(),
+        version: 5
+      };
+
+      const content = JSON.stringify(payload, null, 2);
+      const bytes = new TextEncoder().encode(content);
+      let binary = '';
+      bytes.forEach(b => binary += String.fromCharCode(b));
+      const base64Content = btoa(binary);
+
+      try {
+        const shaRes = await fetch(`${GITHUB_API}?ref=${GITHUB_BRANCH}&t=${Date.now()}`, {
+          headers: { 'Authorization': `Bearer ${githubToken}`, 'Accept': 'application/vnd.github+json' }
+        });
+        if (shaRes.ok) fileSha = (await shaRes.json()).sha;
+      } catch (e) {}
+
+      const body = {
+        message: commitMessage,
+        content: base64Content,
+        branch: GITHUB_BRANCH
+      };
+      if (fileSha) body.sha = fileSha;
+
+      const res = await fetch(GITHUB_API, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${githubToken}`,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || `HTTP ${res.status}`);
+      }
+      const result = await res.json();
+      fileSha = result.content.sha;
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify(payload)); } catch (e) {}
+      return result;
+    } finally {
+      if (!silent) hideLoading();
+    }
+  }
+
+  // =====================================================
+  // ===== STORAGE =======================================
+  // =====================================================
+  async function loadData() {
+    isAdmin = sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
+    githubToken = localStorage.getItem(GITHUB_TOKEN_KEY) || '';
+
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) data = JSON.parse(cached);
+    } catch (e) {}
+
+    if (!data.categoryTree || data.categoryTree.length === 0) {
+      data.categoryTree = [...DEFAULT_TREE];
+      data.prompts = data.prompts && data.prompts.length > 0 ? data.prompts : [...DEFAULT_PROMPTS];
+    }
+    if (!data.lockedSubcategories) data.lockedSubcategories = {};
+
+    await loadFromGitHub();
+    updateAdminUI();
+  }
+
+  async function manualRefresh() {
+    showLoading('রিফ্রেশ হচ্ছে...');
+    await loadFromGitHub(true);
+    hideLoading();
+    renderAll();
+    showToast('🔄 রিফ্রেশ সম্পন্ন!');
+  }
+
+  // =====================================================
+  // ===== PASSWORD HASH =================================
+  // =====================================================
+  function hashPassword(pwd) {
+    let hash = 0;
+    for (let i = 0; i < pwd.length; i++) {
+      const char = pwd.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return 'h_' + Math.abs(hash).toString(36) + '_' + pwd.length;
+  }
+
+  // =====================================================
+  // ===== ADMIN =========================================
+  // =====================================================
+  function toggleAdmin() {
+    if (isAdmin) {
+      if (confirm('লগআউট করতে চান?')) logoutAdmin();
+    } else {
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('loginModal').classList.add('active');
+      setTimeout(() => document.getElementById('adminPassword').focus(), 100);
+    }
+  }
+
+  async function loginAdmin() {
+    const pwd = document.getElementById('adminPassword').value;
+    if (pwd === ADMIN_PASSWORD) {
+      isAdmin = true;
+      sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+      closeLogin();
+      updateAdminUI();
+      if (!githubToken) {
+        setTimeout(() => {
+          document.getElementById('githubTokenInput').value = '';
+          document.getElementById('tokenModal').classList.add('active');
+        }, 300);
+      } else {
+        showToast('✅ লগইন সফল!');
+      }
+    } else {
+      showToast('❌ ভুল পাসওয়ার্ড!', false);
+    }
+  }
+
+  async function submitToken() {
+    const token = document.getElementById('githubTokenInput').value.trim();
+    if (!token) { showToast('টোকেন দিন!', false); return; }
+
+    showLoading('টোকেন ভেরিফাই হচ্ছে...');
+    try {
+      const res = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}`, {
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+      });
+      if (!res.ok) throw new Error('টোকেন বা রিপো সঠিক নয়');
+      const repoData = await res.json();
+      if (!repoData.permissions || !repoData.permissions.push) {
+        throw new Error('এই টোকেনে write permission নেই');
+      }
+      githubToken = token;
+      localStorage.setItem(GITHUB_TOKEN_KEY, token);
+      closeTokenModal();
+      hideLoading();
+      showToast('✅ টোকেন সেভ হয়েছে!');
+      await loadFromGitHub(true);
+      renderAll();
+    } catch (err) {
+      hideLoading();
+      showToast('❌ ' + err.message, false);
+    }
+  }
+
+  function closeTokenModal() { document.getElementById('tokenModal').classList.remove('active'); }
+
+  function logoutAdmin() {
+    isAdmin = false;
+    sessionStorage.removeItem(ADMIN_SESSION_KEY);
+    updateAdminUI();
+    showToast('লগআউট হয়েছে');
+  }
+
+  function resetToken() {
+    if (!confirm('টোকেন রিসেট করবেন?')) return;
+    localStorage.removeItem(GITHUB_TOKEN_KEY);
+    githubToken = '';
+    logoutAdmin();
+    showToast('টোকেন রিসেট হয়েছে');
+  }
+
+  function closeLogin() { document.getElementById('loginModal').classList.remove('active'); }
+
+  function updateAdminUI() {
+    const addBtn = document.getElementById('addBtn');
+    const adminBar = document.getElementById('adminBar');
+    const adminBtn = document.getElementById('adminBtn');
+
+    if (isAdmin) {
+      addBtn.style.display = 'inline-flex';
+      adminBar.classList.add('visible');
+      adminBtn.innerHTML = '👤 <span>অ্যাডমিন</span>';
+      adminBtn.style.background = 'linear-gradient(135deg, #10b981, #06b6d4)';
+      adminBtn.style.color = 'white';
+      adminBtn.style.border = 'none';
+    } else {
+      addBtn.style.display = 'none';
+      adminBar.classList.remove('visible');
+      adminBtn.innerHTML = '🔐 <span>অ্যাডমিন</span>';
+      adminBtn.style.background = '';
+      adminBtn.style.color = '';
+      adminBtn.style.border = '';
+    }
+    renderAll();
+  }
+
+  // =====================================================
+  // ===== CATEGORY & SUBCATEGORY LOCK SYSTEM ============
+  // =====================================================
+  function isCategoryLocked(cat) {
+    return !!data.lockedCategories[cat];
+  }
+
+  function subKey(cat, sub) {
+    return cat + '::' + sub;
+  }
+
+  function isSubcategoryLocked(cat, sub) {
+    // প্যারেন্ট ক্যাটাগরি লক থাকলে সাবও লক
+    if (isCategoryLocked(cat)) return true;
+    return !!data.lockedSubcategories[subKey(cat, sub)];
+  }
+
+  function isCategoryUnlockedInSession(cat) {
+    return sessionStorage.getItem('unlocked_cat_' + cat) === 'true';
+  }
+
+  function isSubcategoryUnlockedInSession(cat, sub) {
+    // প্যারেন্ট unlock হলে সাবও unlock
+    if (isCategoryUnlockedInSession(cat)) return true;
+    return sessionStorage.getItem('unlocked_sub_' + subKey(cat, sub)) === 'true';
+  }
+
+  // ---- Category Lock ----
+  function openLockCategoryModal(cat) {
+    if (!isAdmin) return;
+    pendingLockType = 'category';
+    pendingLockCategory = cat;
+    pendingLockSubName = null;
+    document.getElementById('lockCatName').textContent = `ক্যাটাগরি: ${cat}`;
+    document.getElementById('catLockPassword').value = '';
+    document.getElementById('catLockPasswordConfirm').value = '';
+    document.getElementById('lockModal').classList.add('active');
+  }
+
+  // ---- Subcategory Lock ----
+  function openLockSubcategoryModal(cat, sub) {
+    if (!isAdmin) return;
+    pendingLockType = 'subcategory';
+    pendingLockCategory = cat;
+    pendingLockSubName = sub;
+    document.getElementById('lockCatName').textContent = `সাব-ক্যাটাগরি: ${cat} › ${sub}`;
+    document.getElementById('catLockPassword').value = '';
+    document.getElementById('catLockPasswordConfirm').value = '';
+    document.getElementById('lockModal').classList.add('active');
+  }
+
+  function closeLockModal() {
+    document.getElementById('lockModal').classList.remove('active');
+    pendingLockCategory = null;
+    pendingLockSubName = null;
+    pendingLockType = null;
+  }
+
+  async function confirmLockCategory() {
+    const pwd = document.getElementById('catLockPassword').value;
+    const pwdConfirm = document.getElementById('catLockPasswordConfirm').value;
+    if (!pwd || pwd.length < 3) { showToast('কমপক্ষে ৩ অক্ষর!', false); return; }
+    if (pwd !== pwdConfirm) { showToast('দুইটি মিলছে না!', false); return; }
+
+    const hash = hashPassword(pwd);
+    let commitMsg = '';
+
+    if (pendingLockType === 'subcategory') {
+      const key = subKey(pendingLockCategory, pendingLockSubName);
+      data.lockedSubcategories[key] = hash;
+      sessionStorage.removeItem('unlocked_sub_' + key);
+      commitMsg = `Lock subcat: ${pendingLockCategory}/${pendingLockSubName}`;
+    } else {
+      data.lockedCategories[pendingLockCategory] = hash;
+      sessionStorage.removeItem('unlocked_cat_' + pendingLockCategory);
+      commitMsg = `Lock category: ${pendingLockCategory}`;
+    }
+
+    closeLockModal();
+    renderAll();
+
+    try {
+      await saveToGitHub(commitMsg);
+      showToast(`🔒 লক করা হয়েছে!`);
+    } catch (e) {
+      showToast('❌ সেভ ব্যর্থ: ' + e.message, false);
+    }
+  }
+
+  // ---- Unlock ----
+  function openUnlockCategoryModal(cat) {
+    pendingUnlockType = 'category';
+    pendingUnlockCategory = cat;
+    pendingUnlockSubName = null;
+    document.getElementById('unlockTitle').textContent = '🔓 ক্যাটাগরি আনলক';
+    document.getElementById('unlockCatName').textContent = `ক্যাটাগরি: ${cat}`;
+    document.getElementById('unlockPassword').value = '';
+    document.getElementById('unlockModal').classList.add('active');
+    setTimeout(() => document.getElementById('unlockPassword').focus(), 100);
+  }
+
+  function openUnlockSubcategoryModal(cat, sub) {
+    pendingUnlockType = 'subcategory';
+    pendingUnlockCategory = cat;
+    pendingUnlockSubName = sub;
+    document.getElementById('unlockTitle').textContent = '🔓 সাব-ক্যাটাগরি আনলক';
+    document.getElementById('unlockCatName').textContent = `${cat} › ${sub}`;
+    document.getElementById('unlockPassword').value = '';
+    document.getElementById('unlockModal').classList.add('active');
+    setTimeout(() => document.getElementById('unlockPassword').focus(), 100);
+  }
+
+  function closeUnlockModal() {
+    document.getElementById('unlockModal').classList.remove('active');
+    pendingUnlockCategory = null;
+    pendingUnlockSubName = null;
+    pendingUnlockType = null;
+  }
+
+  function confirmUnlockCategory() {
+    const pwd = document.getElementById('unlockPassword').value;
+
+    if (pendingUnlockType === 'subcategory') {
+      const key = subKey(pendingUnlockCategory, pendingUnlockSubName);
+      const stored = data.lockedSubcategories[key];
+      if (hashPassword(pwd) === stored) {
+        sessionStorage.setItem('unlocked_sub_' + key, 'true');
+        const cat = pendingUnlockCategory;
+        const sub = pendingUnlockSubName;
+        closeUnlockModal();
+        activeCategory = cat;
+        activeSubcategory = sub;
+        expandedCats[cat] = true;
+        renderAll();
+        showToast(`🔓 খোলা হয়েছে!`);
+      } else {
+        showToast('❌ ভুল পাসওয়ার্ড!', false);
+        document.getElementById('unlockPassword').value = '';
+      }
+    } else {
+      if (hashPassword(pwd) === data.lockedCategories[pendingUnlockCategory]) {
+        sessionStorage.setItem('unlocked_cat_' + pendingUnlockCategory, 'true');
+        const cat = pendingUnlockCategory;
+        closeUnlockModal();
+        activeCategory = cat;
+        activeSubcategory = null;
+        expandedCats[cat] = true;
+        renderAll();
+        showToast(`🔓 "${cat}" খোলা হয়েছে!`);
+      } else {
+        showToast('❌ ভুল পাসওয়ার্ড!', false);
+        document.getElementById('unlockPassword').value = '';
+      }
+    }
+  }
+
+  async function permanentlyUnlockCategory(cat) {
+    if (!isAdmin) return;
+    if (!confirm(`"${cat}" ক্যাটাগরি স্থায়ীভাবে আনলক?`)) return;
+    delete data.lockedCategories[cat];
+    sessionStorage.removeItem('unlocked_cat_' + cat);
+    renderAll();
+    try {
+      await saveToGitHub(`Unlock category: ${cat}`);
+      showToast(`🔓 আনলক হয়েছে!`);
+      renderCatManage();
+    } catch (e) {
+      showToast('❌ সেভ ব্যর্থ: ' + e.message, false);
+    }
+  }
+
+  async function permanentlyUnlockSubcategory(cat, sub) {
+    if (!isAdmin) return;
+    if (!confirm(`"${cat} › ${sub}" সাব-ক্যাটাগরি আনলক?`)) return;
+    const key = subKey(cat, sub);
+    delete data.lockedSubcategories[key];
+    sessionStorage.removeItem('unlocked_sub_' + key);
+    renderAll();
+    try {
+      await saveToGitHub(`Unlock subcat: ${cat}/${sub}`);
+      showToast(`🔓 আনলক হয়েছে!`);
+      renderCatManage();
+    } catch (e) {
+      showToast('❌ সেভ ব্যর্থ: ' + e.message, false);
+    }
+  }
+
+  // =====================================================
+  // ===== SIDEBAR VISIBILITY TOGGLE =====================
+  // =====================================================
+  function toggleSidebarVisibility() {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    const isHidden = sidebar.classList.toggle('hidden');
+    toggle.classList.toggle('active', !isHidden);
+
+    // State সেভ করুন
+    localStorage.setItem(SIDEBAR_STATE_KEY, isHidden ? 'hidden' : 'visible');
+
+    // Mobile overlay
+    if (window.innerWidth <= 768 && !isHidden) {
+      document.getElementById('sidebarOverlay').classList.add('active');
+    } else {
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+  }
+
+  function restoreSidebarState() {
+    const state = localStorage.getItem(SIDEBAR_STATE_KEY);
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+
+    if (state === 'hidden') {
+      sidebar.classList.add('hidden');
+      toggle.classList.remove('active');
+    } else {
+      sidebar.classList.remove('hidden');
+      toggle.classList.add('active');
+    }
+  }
+
+  function closeSidebarMobile() {
+    if (window.innerWidth <= 768) {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.add('hidden');
+      document.getElementById('sidebarToggle').classList.remove('active');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+      localStorage.setItem(SIDEBAR_STATE_KEY, 'hidden');
+    }
+  }
+
+  // =====================================================
+  // ===== SIDEBAR RENDER ================================
+  // =====================================================
+  function renderSidebar() {
+    const container = document.getElementById('sidebarContent');
+    const totalVisible = data.prompts.filter(p => {
+      if (isCategoryLocked(p.category)) return isCategoryUnlockedInSession(p.category);
+      if (isSubcategoryLocked(p.category, p.subcategory)) return isSubcategoryUnlockedInSession(p.category, p.subcategory);
+      return true;
+    }).length;
+    document.getElementById('totalCount').textContent = totalVisible;
+
+    let html = '';
+
+    html += `
+      <div class="cat-group">
+        <div class="cat-main ${!activeCategory ? 'active' : ''}" onclick="selectCategory(null)">
+          <div class="cat-main-info">
+            <span>🏠</span>
+            <span class="cat-main-name">সব প্রম্পট</span>
+          </div>
+          <span class="cat-main-count">${totalVisible}</span>
+        </div>
+      </div>
+    `;
+
+    data.categoryTree.forEach(cat => {
+      const catLocked = isCategoryLocked(cat.name);
+      const catUnlocked = isCategoryUnlockedInSession(cat.name);
+      const expanded = expandedCats[cat.name];
+      const visibleCount = data.prompts.filter(p => {
+        if (p.category !== cat.name) return false;
+        if (catLocked) return catUnlocked;
+        if (isSubcategoryLocked(cat.name, p.subcategory)) return isSubcategoryUnlockedInSession(cat.name, p.subcategory);
+        return true;
+      }).length;
+      const isActive = activeCategory === cat.name && !activeSubcategory;
+
+      html += `
+        <div class="cat-group ${expanded ? 'expanded' : ''}">
+          <div class="cat-main ${isActive ? 'active' : ''}" onclick="toggleCategory('${cat.name.replace(/'/g, "\\'")}')">
+            <div class="cat-main-info">
+              <span class="cat-main-arrow">▶</span>
+              <span class="cat-main-name">${catLocked ? '🔒 ' : ''}${cat.name}</span>
+            </div>
+            <div style="display:flex;gap:5px;align-items:center;">
+              <span class="cat-main-count">${visibleCount}</span>
+              ${isAdmin ? `
+                <span class="lock-mini" onclick="event.stopPropagation(); ${catLocked ? `openUnlockCategoryModal('${cat.name.replace(/'/g, "\\'")}')` : `openLockCategoryModal('${cat.name.replace(/'/g, "\\'")}')`}">
+                  ${catLocked ? '🔓' : '🔒'}
+                </span>
+              ` : ''}
+            </div>
+          </div>
+          <div class="subcat-list">
+      `;
+
+      if (cat.subs && cat.subs.length > 0) {
+        cat.subs.forEach(sub => {
+          const subLocked = isSubcategoryLocked(cat.name, sub.name);
+          const subCount = data.prompts.filter(p => p.category === cat.name && p.subcategory === sub.name).length;
+          const subActive = activeCategory === cat.name && activeSubcategory === sub.name;
+          const showLockIcon = subLocked && !catLocked; // প্যারেন্ট লক থাকলে সাব-এ আলাদা দেখাব না
+
+          html += `
+            <div class="subcat-item ${subActive ? 'active' : ''}" onclick="event.stopPropagation(); selectSubcategory('${cat.name.replace(/'/g, "\\'")}', '${sub.name.replace(/'/g, "\\'")}')">
+              <span class="subcat-dot"></span>
+              <span class="subcat-name">${showLockIcon ? '🔒 ' : ''}${sub.name}</span>
+              <span class="subcat-count">${subCount}</span>
+              ${isAdmin && !catLocked ? `
+                <span class="lock-mini" onclick="event.stopPropagation(); ${subLocked ? `openUnlockSubcategoryModal('${cat.name.replace(/'/g, "\\'")}', '${sub.name.replace(/'/g, "\\'")}')` : `openLockSubcategoryModal('${cat.name.replace(/'/g, "\\'")}', '${sub.name.replace(/'/g, "\\'")}')`}">
+                  ${subLocked ? '🔓' : '🔒'}
+                </span>
+              ` : ''}
+            </div>
+          `;
+        });
+      } else {
+        html += `<div class="subcat-item" style="opacity:0.5;cursor:default;">সাব-ক্যাটাগরি নেই</div>`;
+      }
+
+      html += `
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  // =====================================================
+  // ===== BREADCRUMB ====================================
+  // =====================================================
+  function renderBreadcrumbAndTitle() {
+    const bc = document.getElementById('breadcrumb');
+    let html = `<span class="breadcrumb-item ${!activeCategory ? 'current' : ''}" onclick="selectCategory(null)">🏠 সব</span>`;
+
+    if (activeCategory) {
+      html += `<span class="breadcrumb-sep">›</span>`;
+      html += `<span class="breadcrumb-item ${!activeSubcategory ? 'current' : ''}" onclick="selectCategory('${activeCategory.replace(/'/g, "\\'")}')">${activeCategory}</span>`;
+    }
+    if (activeSubcategory) {
+      html += `<span class="breadcrumb-sep">›</span>`;
+      html += `<span class="breadcrumb-item current">${activeSubcategory}</span>`;
+    }
+    bc.innerHTML = html;
+
+    let title = 'সব প্রম্পট';
+    if (activeCategory && activeSubcategory) title = `${activeCategory} › ${activeSubcategory}`;
+    else if (activeCategory) title = activeCategory;
+    document.querySelector('#sectionTitle span').textContent = title;
+  }
+
+  // =====================================================
+  // ===== FILTER ========================================
+  // =====================================================
+  function getFilteredPrompts() {
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    return data.prompts.filter(p => {
+      // Lock check
+      if (isCategoryLocked(p.category) && !isCategoryUnlockedInSession(p.category)) return false;
+      if (isSubcategoryLocked(p.category, p.subcategory) && !isSubcategoryUnlockedInSession(p.category, p.subcategory)) return false;
+
+      // Category
+      if (activeCategory && p.category !== activeCategory) return false;
+      // Subcategory
+      if (activeSubcategory && p.subcategory !== activeSubcategory) return false;
+
+      // Search
+      if (query) {
+        const match = p.title.toLowerCase().includes(query) ||
+                      p.content.toLowerCase().includes(query) ||
+                      (p.category || '').toLowerCase().includes(query) ||
+                      (p.subcategory || '').toLowerCase().includes(query);
+        if (!match) return false;
+      }
+      return true;
+    }).sort((a, b) => b.date - a.date);
+  }
+
+  function renderPrompts() {
+    renderSidebar();
+    renderBreadcrumbAndTitle();
+
+    const grid = document.getElementById('promptsGrid');
+    const filtered = getFilteredPrompts();
+
+    document.getElementById('sectionCount').textContent = filtered.length;
+    document.getElementById('sectionInfo').textContent = filtered.length > 0 ? `${filtered.length} টি প্রম্পট` : '';
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">🔍</div>
+          <h3>কোনো প্রম্পট পাওয়া যায়নি</h3>
+          <p>${isAdmin ? 'নতুন প্রম্পট যোগ করুন' : 'অন্য ক্যাটাগরি চেষ্টা করুন'}</p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(p => {
+      const isActiveCopy = currentlyCopiedId === p.id;
+      return `
+      <div class="prompt-card ${isActiveCopy ? 'copied-active' : ''}" data-id="${p.id}">
+        <div class="card-header">
+          <div class="card-tags">
+            <span class="card-cat">${p.category}</span>
+            ${p.subcategory ? `<span class="card-subcat">${p.subcategory}</span>` : ''}
+          </div>
+          ${isAdmin ? `
+          <div class="card-actions">
+            <button class="icon-btn" onclick="editPrompt('${p.id}')" title="এডিট">✏️</button>
+            <button class="icon-btn delete" onclick="deletePrompt('${p.id}')" title="ডিলিট">🗑</button>
+          </div>
+          ` : ''}
+        </div>
+        <h3 class="prompt-title">${escapeHtml(p.title)}</h3>
+        <div class="prompt-content">${escapeHtml(p.content)}</div>
+        <div class="prompt-footer">
+          <span class="prompt-date">${formatDate(p.date)}</span>
+          <button class="copy-btn ${isActiveCopy ? 'copied' : ''}" onclick="copyPrompt('${p.id}', this)">
+            ${isActiveCopy ? '📌 কপি করা' : '📋 কপি'}
+          </button>
+        </div>
+      </div>
+    `;
+    }).join('');
+  }
+
+  function renderAll() {
+    renderPrompts();
+    updateCategorySelect();
+  }
+
+  // =====================================================
+  // ===== NAVIGATION ====================================
+  // =====================================================
+  function toggleCategory(catName) {
+    const locked = isCategoryLocked(catName);
+    if (locked && !isCategoryUnlockedInSession(catName)) {
+      openUnlockCategoryModal(catName);
+      return;
+    }
+    expandedCats[catName] = !expandedCats[catName];
+    activeCategory = catName;
+    activeSubcategory = null;
+    renderAll();
+    document.getElementById('contentArea').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function selectSubcategory(catName, subName) {
+    const catLocked = isCategoryLocked(catName);
+    const subLocked = isSubcategoryLocked(catName, subName);
+
+    if (catLocked && !isCategoryUnlockedInSession(catName)) {
+      openUnlockCategoryModal(catName);
+      return;
+    }
+    if (subLocked && !isSubcategoryUnlockedInSession(catName, subName)) {
+      openUnlockSubcategoryModal(catName, subName);
+      return;
+    }
+
+    activeCategory = catName;
+    activeSubcategory = subName;
+    expandedCats[catName] = true;
+    renderAll();
+    document.getElementById('contentArea').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function selectCategory(catName) {
+    if (catName === null) {
+      activeCategory = null;
+      activeSubcategory = null;
+    } else {
+      const locked = isCategoryLocked(catName);
+      if (locked && !isCategoryUnlockedInSession(catName)) {
+        openUnlockCategoryModal(catName);
+        return;
+      }
+      activeCategory = catName;
+      activeSubcategory = null;
+    }
+    renderAll();
+    document.getElementById('contentArea').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function resetAll() {
+    activeCategory = null;
+    activeSubcategory = null;
+    document.getElementById('searchInput').value = '';
+    renderAll();
+    document.getElementById('contentArea').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // =====================================================
+  // ===== COPY (Active Highlight) =======================
+  // =====================================================
+  async function copyPrompt(id, btn) {
+    const p = data.prompts.find(x => x.id === id);
+    if (!p) return;
+
+    try {
+      await navigator.clipboard.writeText(p.content);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = p.content;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (err) {}
+      document.body.removeChild(ta);
+    }
+
+    currentlyCopiedId = id;
+    applyCopiedActive();
+    showToast('✅ প্রম্পট কপি হয়েছে!');
+  }
+
+  function applyCopiedActive() {
+    document.querySelectorAll('.prompt-card').forEach(card => {
+      const cardId = card.dataset.id;
+      const copyBtn = card.querySelector('.copy-btn');
+      if (cardId === currentlyCopiedId) {
+        card.classList.add('copied-active');
+        if (copyBtn) {
+          copyBtn.classList.add('copied');
+          copyBtn.innerHTML = '📌 কপি করা';
+        }
+      } else {
+        card.classList.remove('copied-active');
+        if (copyBtn) {
+          copyBtn.classList.remove('copied');
+          copyBtn.innerHTML = '📋 কপি';
+        }
+      }
+    });
+  }
+
+  // =====================================================
+  // ===== HELPERS =======================================
+  // =====================================================
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function formatDate(ts) {
+    const d = new Date(ts);
+    const now = new Date();
+    const diff = Math.floor((now - d) / 86400000);
+    if (diff === 0) return 'আজ';
+    if (diff === 1) return 'গতকাল';
+    if (diff < 7) return `${diff} দিন আগে`;
+    return d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function updateCategorySelect() {
+    const sel = document.getElementById('promptCategory');
+    sel.innerHTML = data.categoryTree.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    updateSubcatSelect();
+  }
+
+  function updateSubcatSelect() {
+    const catSel = document.getElementById('promptCategory');
+    const subSel = document.getElementById('promptSubcategory');
+    const cat = data.categoryTree.find(c => c.name === catSel.value);
+    if (cat && cat.subs && cat.subs.length > 0) {
+      subSel.innerHTML = cat.subs.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+    } else {
+      subSel.innerHTML = '<option value="সাধারণ">সাধারণ</option>';
+    }
+  }
+
+  // =====================================================
+  // ===== CRUD ==========================================
+  // =====================================================
+  function openModal() {
+    if (!isAdmin) { showToast('অ্যাডমিন লগইন করুন!', false); return; }
+    editingId = null;
+    document.getElementById('modalTitle').textContent = 'নতুন প্রম্পট যোগ করুন';
+    document.getElementById('promptTitle').value = '';
+    document.getElementById('promptContent').value = '';
+    updateCategorySelect();
+
+    if (activeCategory) {
+      const catSel = document.getElementById('promptCategory');
+      catSel.value = activeCategory;
+      updateSubcatSelect();
+      if (activeSubcategory) {
+        document.getElementById('promptSubcategory').value = activeSubcategory;
+      }
+    }
+    document.getElementById('modal').classList.add('active');
+    setTimeout(() => document.getElementById('promptTitle').focus(), 100);
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+    editingId = null;
+  }
+
+  function editPrompt(id) {
+    if (!isAdmin) return;
+    const p = data.prompts.find(x => x.id === id);
+    if (!p) return;
+    editingId = id;
+    document.getElementById('modalTitle').textContent = 'প্রম্পট এডিট করুন';
+    document.getElementById('promptTitle').value = p.title;
+    updateCategorySelect();
+    document.getElementById('promptCategory').value = p.category;
+    updateSubcatSelect();
+    document.getElementById('promptSubcategory').value = p.subcategory || 'সাধারণ';
+    document.getElementById('promptContent').value = p.content;
+    document.getElementById('modal').classList.add('active');
+  }
+
+  async function savePrompt() {
+    if (!isAdmin) return;
+    const title = document.getElementById('promptTitle').value.trim();
+    const category = document.getElementById('promptCategory').value;
+    const subcategory = document.getElementById('promptSubcategory').value;
+    const content = document.getElementById('promptContent').value.trim();
+
+    if (!title || !content) { showToast('শিরোনাম ও টেক্সট দিন!', false); return; }
+
+    const wasEditing = !!editingId;
+
+    if (wasEditing) {
+      const p = data.prompts.find(x => x.id === editingId);
+      if (p) {
+        p.title = title;
+        p.category = category;
+        p.subcategory = subcategory;
+        p.content = content;
+        p.date = Date.now();
+      }
+    } else {
+      data.prompts.push({
+        id: Date.now().toString() + Math.random().toString(36).slice(2, 7),
+        title, category, subcategory, content,
+        date: Date.now()
+      });
+    }
+
+    renderAll();
+    closeModal();
+
+    try {
+      await saveToGitHub(wasEditing ? 'Edit prompt' : 'Add new prompt');
+      showToast(wasEditing ? '✅ আপডেট হয়েছে!' : '✅ যোগ হয়েছে!');
+    } catch (e) {
+      showToast('❌ সেভ ব্যর্থ: ' + e.message, false);
+    }
+  }
+
+  async function deletePrompt(id) {
+    if (!isAdmin) { showToast('অ্যাডমিন লাগবে!', false); return; }
+    if (!confirm('ডিলিট করবেন?')) return;
+    data.prompts = data.prompts.filter(p => p.id !== id);
+    if (currentlyCopiedId === id) currentlyCopiedId = null;
+    renderAll();
+    try {
+      await saveToGitHub('Delete prompt');
+      showToast('🗑 ডিলিট হয়েছে!');
+    } catch (e) {
+      showToast('❌ সেভ ব্যর্থ: ' + e.message, false);
+    }
+  }
+
+  // =====================================================
+  // ===== CATEGORY MANAGE ===============================
+  // =====================================================
+  function openCategoryManage() {
+    if (!isAdmin) return;
+    renderCatManage();
+    document.getElementById('catModal').classList.add('active');
+  }
+
+  function closeCategoryManage() {
+    document.getElementById('catModal').classList.remove('active');
+  }
+
+  function renderCatManage() {
+    const body = document.getElementById('catModalBody');
+    body.innerHTML = `
+      <div style="display:flex;gap:8px;margin-bottom:18px;">
+        <input type="text" id="newCatInput" placeholder="নতুন ক্যাটাগরি..."
+          style="flex:1;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:11px;color:var(--text);font-size:13px;outline:none;">
+        <button class="btn btn-success" onclick="addNewCategory()">➕ যোগ</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        ${data.categoryTree.map((cat, idx) => {
+          const catLocked = isCategoryLocked(cat.name);
+          const count = data.prompts.filter(p => p.category === cat.name).length;
+          return `
+            <div style="padding:14px;background:var(--bg);border:1px solid ${catLocked ? 'rgba(245,158,11,0.5)' : 'var(--border)'};border-radius:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;">
+                <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
+                  <span>${catLocked ? '🔒' : '📁'}</span>
+                  <div style="min-width:0;">
+                    <div style="font-weight:600;font-size:14px;color:var(--text);">${cat.name}</div>
+                    <div style="font-size:11px;color:var(--text-muted);">${count} প্রম্পট • ${cat.subs.length} সাব-ক্যাটাগরি</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  ${catLocked
+                    ? `<button class="btn btn-warning" style="padding:5px 10px;font-size:11px;" onclick="permanentlyUnlockCategory('${cat.name.replace(/'/g, "\\'")}')">🔓 আনলক</button>`
+                    : `<button class="btn btn-ghost" style="padding:5px 10px;font-size:11px;" onclick="closeCategoryManage();openLockCategoryModal('${cat.name.replace(/'/g, "\\'")}')">🔒 লক</button>`
+                  }
+                  <button class="icon-btn delete" style="width:28px;height:28px;font-size:12px;" onclick="deleteCategory('${cat.name.replace(/'/g, "\\'")}')" title="ডিলিট">🗑</button>
+                </div>
+              </div>
+              <div style="padding-left:26px;display:flex;flex-direction:column;gap:6px;">
+                ${cat.subs.map((sub, sIdx) => {
+                  const subKeyStr = subKey(cat.name, sub.name);
+                  const subLocked = !!data.lockedSubcategories[subKeyStr];
+                  return `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:rgba(15,23,42,0.4);border-radius:8px;font-size:12px;gap:8px;border:1px solid ${subLocked ? 'rgba(245,158,11,0.4)' : 'transparent'};">
+                      <span style="color:var(--text-muted);display:flex;align-items:center;gap:6px;flex:1;min-width:0;">
+                        <span style="width:5px;height:5px;border-radius:50%;background:${subLocked ? 'var(--warning)' : 'var(--accent)'};"></span>
+                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${subLocked ? '🔒 ' : ''}${sub.name}</span>
+                      </span>
+                      <div style="display:flex;gap:4px;">
+                        ${subLocked
+                          ? `<button class="btn btn-warning" style="padding:3px 8px;font-size:10px;" onclick="permanentlyUnlockSubcategory('${cat.name.replace(/'/g, "\\'")}', '${sub.name.replace(/'/g, "\\'")}')">🔓</button>`
+                          : `<button class="btn btn-ghost" style="padding:3px 8px;font-size:10px;" onclick="closeCategoryManage();openLockSubcategoryModal('${cat.name.replace(/'/g, "\\'")}', '${sub.name.replace(/'/g, "\\'")}')">🔒</button>`
+                        }
+                        <button class="icon-btn delete" style="width:22px;height:22px;font-size:10px;" onclick="deleteSubcategory(${idx}, ${sIdx})" title="ডিলিট">🗑</button>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+                <div style="display:flex;gap:6px;margin-top:4px;">
+                  <input type="text" id="newSub_${idx}" placeholder="নতুন সাব-ক্যাটাগরি..."
+                    style="flex:1;padding:7px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;outline:none;">
+                  <button class="btn btn-ghost" style="padding:6px 12px;font-size:11px;" onclick="addSubcategory(${idx})">➕</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  async function addNewCategory() {
+    const name = document.getElementById('newCatInput').value.trim();
+    if (!name) { showToast('নাম দিন!', false); return; }
+    if (data.categoryTree.find(c => c.name === name)) { showToast('আগেই আছে!', false); return; }
+    data.categoryTree.push({ name, subs: [{ name: 'সাধারণ' }] });
+    renderCatManage(); renderAll();
+    try {
+      await saveToGitHub(`Add category: ${name}`);
+      showToast(`✅ যোগ হয়েছে!`);
+    } catch (e) {
+      showToast('❌ সেভ ব্যর্থ: ' + e.message, false);
+    }
+  }
+
+  async function deleteCategory(catName) {
+    const count = data.prompts.filter(p => p.category === catName).length;
+    if (!confirm(`"${catName}" ডিলিট? ${count} টি প্রম্পটও ডিলিট হবে।`)) return;
+    data.prompts = data.prompts.filter(p => p.category !== catName);
+    data.categoryTree = data.categoryTree.filter(c => c.name !== catName);
+    if (data.lockedCategories[catName]) delete data.lockedCategories[catName];
+    // ঐ ক্যাটাগরির সব sub-lock রিমুভ
+    Object.keys(data.lockedSubcategories).forEach(k => {
+      if (k.startsWith(catName + '::')) delete data.lockedSubcategories[k];
+    });
+    sessionStorage.removeItem('unlocked_cat_' + catName);
+    if (activeCategory === catName) { activeCategory = null; activeSubcategory = null; }
+    renderCatManage(); renderAll();
+    try {
+      await saveToGitHub(`Delete category: ${catName}`);
+      showToast('🗑 ডিলিট হয়েছে!');
+    } catch (e) {
+      showToast('❌ সেভ ব্যর্থ: ' + e.message, false);
+    }
+  }
+
+  async function addSubcategory(catIdx) {
+    const input = document.getElementById(`newSub_${catIdx}`);
+    const name = input.value.trim();
+    if (!name) { showToast('নাম দিন!', false); return; }
+    if (data.categoryTree[catIdx].subs.find(s => s.name === name)) {
+      showToast('আগেই আছে!', false); return;
+    }
+    data.categoryTree[catIdx].subs.push({ name });
+    input.value = '';
+    renderCatManage();
+    try {
+      await saveToGitHub(`Add subcategory: ${name}`);
+      showToast(`✅ যোগ হয়েছে!`);
+    } catch (e) {
+      showToast('❌ সেভ ব্যর্থ: ' + e.message, false);
+    }
+  }
+
+  async function deleteSubcategory(catIdx, subIdx) {
+    const cat = data.categoryTree[catIdx];
+    const sub = cat.subs[subIdx];
+    const count = data.prompts.filter(p => p.category === cat.name && p.subcategory === sub.name).length;
+    if (!confirm(`"${sub.name}" ডিলিট? ${count} টি প্রম্পটও ডিলিট হবে।`)) return;
+    data.prompts = data.prompts.filter(p => !(p.category === cat.name && p.subcategory === sub.name));
+    cat.subs.splice(subIdx, 1);
+    const key = subKey(cat.name, sub.name);
+    if (data.lockedSubcategories[key]) delete data.lockedSubcategories[key];
+    sessionStorage.removeItem('unlocked_sub_' + key);
+    renderCatManage(); renderAll();
+    try {
+      await saveToGitHub(`Delete subcategory: ${sub.name}`);
+      showToast('🗑 ডিলিট হয়েছে!');
+    } catch (e) {
+      showToast('❌ সেভ ব্যর্থ: ' + e.message, false);
+    }
+  }
+
+  // =====================================================
+  // ===== TOAST =========================================
+  // =====================================================
+  let toastTimer;
+  function showToast(msg, success = true) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + (success ? 'success' : 'error');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  // =====================================================
+  // ===== EXPORT / IMPORT ===============================
+  // =====================================================
+  function exportPrompts() {
+    const payload = JSON.stringify({
+      prompts: data.prompts,
+      categoryTree: data.categoryTree,
+      lockedCategories: data.lockedCategories,
+      lockedSubcategories: data.lockedSubcategories,
+      exportDate: new Date().toISOString(),
+      version: 5
+    }, null, 2);
+    const blob = new Blob([payload], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ai-prompts-pro-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('📤 এক্সপোর্ট হয়েছে!');
+  }
+
+  function importPrompts() {
+    if (!isAdmin) { showToast('অ্যাডমিন লাগবে!', false); return; }
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        try {
+          const parsed = JSON.parse(ev.target.result);
+          if (!parsed.prompts || !Array.isArray(parsed.prompts)) {
+            showToast('ফাইল সঠিক নয়!', false); return;
+          }
+          if (!confirm(`${parsed.prompts.length} টি প্রম্পট যোগ করবেন?`)) return;
+
+          const existingIds = new Set(data.prompts.map(p => p.id));
+          const newPrompts = parsed.prompts.filter(p => !existingIds.has(p.id));
+          data.prompts = [...data.prompts, ...newPrompts];
+
+          if (parsed.categoryTree) {
+            parsed.categoryTree.forEach(importedCat => {
+              const existing = data.categoryTree.find(c => c.name === importedCat.name);
+              if (existing) {
+                importedCat.subs.forEach(s => {
+                  if (!existing.subs.find(x => x.name === s.name)) existing.subs.push(s);
+                });
+              } else {
+                data.categoryTree.push(importedCat);
+              }
+            });
+          }
+          if (parsed.lockedSubcategories) {
+            data.lockedSubcategories = { ...data.lockedSubcategories, ...parsed.lockedSubcategories };
+          }
+
+          renderAll();
+          try {
+            await saveToGitHub(`Import ${newPrompts.length} prompts`);
+            showToast(`📥 ${newPrompts.length} টি ইমপোর্ট হয়েছে!`);
+          } catch (err) {
+            showToast('❌ সেভ ব্যর্থ: ' + err.message, false);
+          }
+        } catch (err) {
+          showToast('পড়তে সমস্যা!', false);
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }
+
+  // =====================================================
+  // ===== KEYBOARD ======================================
+  // =====================================================
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal(); closeLogin(); closeCategoryManage();
+      closeLockModal(); closeUnlockModal();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      document.getElementById('searchInput').focus();
+    }
+    // 'S' key দিয়ে sidebar toggle (যখন input-এ ফোকাস নেই)
+    if (e.key === 's' && !e.ctrlKey && !e.metaKey && !e.altKey &&
+        document.activeElement.tagName !== 'INPUT' &&
+        document.activeElement.tagName !== 'TEXTAREA') {
+      toggleSidebarVisibility();
+    }
+  });
+
+  // =====================================================
+  // ===== AUTO REFRESH ==================================
+  // =====================================================
+  setInterval(async () => {
+    if (!isAdmin) {
+      await loadFromGitHub(true);
+      renderAll();
+    }
+  }, 60000);
+
+  // =====================================================
+  // ===== INIT ==========================================
+  // =====================================================
+  (async () => {
+    await loadData();
+    if (data.categoryTree.length > 0) {
+      expandedCats[data.categoryTree[0].name] = true;
+    }
+    restoreSidebarState();
+    document.getElementById('sidebarToggle').classList.add('active');
+    updateCategorySelect();
+    renderAll();
+  })();
+</script>
+</body>
+</html>
